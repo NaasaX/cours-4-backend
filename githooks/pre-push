@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Pre-push hook to run all tests
+# Install: ln -s ../../githooks/pre-push .git/hooks/pre-push
+
+echo "Running pre-push checks..."
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+FAILED=0
+
+# Run PHPCS
+echo -e "${YELLOW}Running PHPCS...${NC}"
+docker compose run --rm php composer run phpcs
+if [ $? -ne 0 ]; then
+    echo -e "${RED}PHPCS failed${NC}"
+    FAILED=$((FAILED + 1))
+fi
+
+# Run PHPStan
+echo -e "${YELLOW}Running PHPStan...${NC}"
+docker compose run --rm php composer run phpstan
+if [ $? -ne 0 ]; then
+    echo -e "${RED}PHPStan failed${NC}"
+    FAILED=$((FAILED + 1))
+fi
+
+# Run PHPUnit
+echo -e "${YELLOW}Running PHPUnit...${NC}"
+docker compose run --rm php php bin/phpunit
+if [ $? -ne 0 ]; then
+    echo -e "${RED}PHPUnit failed${NC}"
+    FAILED=$((FAILED + 1))
+fi
+
+if [ $FAILED -gt 0 ]; then
+    echo -e "${RED}$FAILED test(s) failed. Push aborted.${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}All pre-push checks passed!${NC}"
+exit 0

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Buildings List{% endblock %}
+
+{% block body %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
+    <h1 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px;">Buildings Management</h1>
+    
+    <div style="margin: 20px 0;">
+        <a href="{{ path('app_buildings') }}" style="padding: 10px 20px; background: #007bff; color: white; text-decoration: none; margin-right: 10px; border-radius: 5px;">Buildings</a>
+        <a href="{{ path('app_people') }}" style="padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">People</a>
+    </div>
+
+    {% if buildings is empty %}
+        <div style="padding: 20px; background: #f8d7da; color: #721c24; border-radius: 5px; margin-top: 20px;">
+            <strong>No buildings found.</strong> Please run the command to add sample data.
+        </div>
+    {% else %}
+        <div style="margin-top: 20px;">
+            {% for building in buildings %}
+                <div style="border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 5px; background: #f9f9f9;">
+                    <h2 style="margin-top: 0; color: #007bff;">
+                        <a href="{{ path('app_building_show', {id: building.id}) }}" style="color: #007bff; text-decoration: none;">
+                            {{ building.name }}
+                        </a>
+                    </h2>
+                    <p><strong>Address:</strong> {{ building.address }}</p>
+                    <p><strong>Floors:</strong> {{ building.floors }}</p>
+                    <p><strong>Number of people:</strong> {{ building.people|length }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

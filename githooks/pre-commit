@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Pre-commit hook to run code quality checks
+# Install: ln -s ../../githooks/pre-commit .git/hooks/pre-commit
+
+echo "Running pre-commit checks..."
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+# Run PHPCS
+echo "Checking code style with PHPCS..."
+docker compose run --rm php composer run phpcs
+if [ $? -ne 0 ]; then
+    echo -e "${RED}PHPCS failed. Please fix the code style issues.${NC}"
+    echo "You can run 'docker compose run --rm php composer run phpcs:fix' to auto-fix some issues."
+    exit 1
+fi
+
+echo -e "${GREEN}Pre-commit checks passed!${NC}"
+exit 0

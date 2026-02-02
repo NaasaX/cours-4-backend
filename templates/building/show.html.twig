@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ building.name }}{% endblock %}
+
+{% block body %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
+    <div style="margin-bottom: 20px;">
+        <a href="{{ path('app_buildings') }}" style="padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px;">← Back to Buildings</a>
+    </div>
+
+    <h1 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px;">{{ building.name }}</h1>
+    
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 5px; margin: 20px 0;">
+        <p><strong>Address:</strong> {{ building.address }}</p>
+        <p><strong>Floors:</strong> {{ building.floors }}</p>
+    </div>
+
+    <h2 style="color: #333; margin-top: 30px;">People in this building ({{ building.people|length }})</h2>
+    
+    {% if building.people is empty %}
+        <div style="padding: 20px; background: #fff3cd; color: #856404; border-radius: 5px; margin-top: 20px;">
+            No people registered in this building.
+        </div>
+    {% else %}
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px; background: white;">
+            <thead>
+                <tr style="background: #007bff; color: white;">
+                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">First Name</th>
+                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Last Name</th>
+                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Email</th>
+                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for person in building.people %}
+                    <tr style="{% if loop.index is odd %}background: #f9f9f9;{% endif %}">
+                        <td style="padding: 12px; border: 1px solid #ddd;">{{ person.firstName }}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">{{ person.lastName }}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">{{ person.email }}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">{{ person.phone ?? 'N/A' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}
